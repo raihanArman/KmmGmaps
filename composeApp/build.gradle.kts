@@ -9,6 +9,8 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+val secretFolder = "$projectDir/build/generatedSecret"
+
 kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
@@ -26,6 +28,10 @@ kotlin {
             baseName = "ComposeApp"
             isStatic = true
         }
+    }
+
+    sourceSets.commonMain.configure {
+        kotlin.srcDirs(secretFolder)
     }
     
     sourceSets {
@@ -53,7 +59,7 @@ android {
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")
-    sourceSets["main"].resources.srcDirs("src/commonMain/resources")
+    sourceSets["main"].resources.srcDirs("src/commonMain/resources", secretFolder)
 
     defaultConfig {
         applicationId = "com.randev.kmmgmaps"
@@ -84,3 +90,59 @@ android {
     }
 }
 
+fun generatedSecret(file: String) {
+    val propContent = file("$rootDir/$file").readText()
+    val propData = parseProp(propContent)
+
+    var ktContent = "package com.randev.kmmgmaps\n\nobject SecretConfig {\n"
+    propData.forEach { (key, value) ->
+        ktContent += "    const val $key = $value\n"
+    }
+    ktContent += "}"
+
+    val folder = file(secretFolder)
+    if (!folder.exists()) {
+        folder.mkdirs()
+    }
+
+    val fileSecret = file("$secretFolder/SecretConfig.kt")
+    if (!fileSecret.exists()) {
+        fileSecret.createNewFile()
+    }
+
+    fileSecret.writeText(ktContent)
+}
+
+fun parseProp(content: String): Map<String, Any> {
+    val propertiesData = mutableMapOf<String, Any>()
+    content.lines().forEach { line ->
+        val key = line.substringBefore("=")
+        val rawValue = line.substringAfter("=")
+        val value = when {
+            rawValue == "true" || rawValue == "false" -> {
+                rawValue.toBoolean()
+            }
+            rawValue.toIntOrNull() != null -> {
+                rawValue.toInt()
+            }
+            rawValue.toLongOrNull() != null -> {
+                rawValue.toLong()
+            }
+            else -> "\"$rawValue\""
+        }
+
+        propertiesData[key] = value
+    }
+
+    return propertiesData
+}
+
+tasks.register("generateSecret") {
+    doLast {
+        generatedSecret("secret.properties")
+    }
+}
+
+afterEvaluate {
+    tasks.getByName("generateComposeResClass").dependsOn("generateSecret")
+}
