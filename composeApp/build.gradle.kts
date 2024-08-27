@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinSerializer)
+    alias(libs.plugins.kotlinAndroidParcelize)
 }
 
 val secretFolder = "$projectDir/build/generatedSecret"
@@ -17,6 +18,11 @@ kotlin {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
+
+            freeCompilerArgs.addAll(
+                "-P",
+                "plugin:org.jetbrains.kotlin.parcelize:additionalAnnotation=com.bumble.appyx.utils.multiplatform.Parcelize"
+            )
         }
     }
     
@@ -59,6 +65,12 @@ kotlin {
             implementation(libs.ktor.client.logging)
 
             implementation(libs.compose.viewmodel)
+            implementation(libs.jetbrains.navigation)
+
+            //Appyx
+            implementation(libs.appyx.navigation)
+            implementation(libs.appyx.interactions)
+            api(libs.appyx.backstack)
         }
 
         iosMain.dependencies {
