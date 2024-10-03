@@ -14,4 +14,12 @@ sealed class NavTarget: Parcelable {
     data class Screen2(val name: String): NavTarget()
     @Parcelize
     data object Screen3: NavTarget()
+
+    @Parcelize
+    data object GoogleMaps: NavTarget()
+
+    @Parcelize
+    data object Main: NavTarget()
+    @Parcelize
+    data object ReservedLocation: NavTarget()
 }

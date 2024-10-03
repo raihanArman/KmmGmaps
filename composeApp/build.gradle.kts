@@ -1,6 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -9,23 +10,54 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinSerializer)
     alias(libs.plugins.kotlinAndroidParcelize)
+    alias(libs.plugins.nativeCocoapods)
 }
 
 val secretFolder = "$projectDir/build/generatedSecret"
 
 kotlin {
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-
-            freeCompilerArgs.addAll(
-                "-P",
-                "plugin:org.jetbrains.kotlin.parcelize:additionalAnnotation=com.bumble.appyx.utils.multiplatform.Parcelize"
-            )
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "11"
+                freeCompilerArgs += listOf(
+                    "-P",
+                    "plugin:org.jetbrains.kotlin.parcelize:additionalAnnotation=com.bumble.appyx.utils.multiplatform.Parcelize",
+//                    "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck"
+                )
+            }
         }
     }
-    
+
+    cocoapods {
+        version = "1.0"
+        summary = "Some description for a Kotlin/Native module"
+        homepage = "Link to a Kotlin/Native module homepage"
+        podfile = project.file("../iosApp/Podfile")
+        name = "ComposeApp"
+
+        ios.deploymentTarget = "17.0"
+
+        framework {
+            baseName = "ComposeApp"
+            isStatic = false
+        }
+
+        pod("netfox") {
+            extraOpts += listOf("-compiler-option", "-fmodules")
+            version = "1.21.0"
+        }
+
+        pod("GoogleMaps") {
+            extraOpts += listOf("-compiler-option", "-fmodules")
+        }
+
+        // Maps custom Xcode configuration to NativeBuildType
+//        xcodeConfigurationToNativeBuildType["CUSTOM_DEBUG"] = NativeBuildType.DEBUG
+//        xcodeConfigurationToNativeBuildType["CUSTOM_RELEASE"] = NativeBuildType.RELEASE
+    }
+
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -47,6 +79,9 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
+
+            implementation(libs.googleMaps.android.core)
+            implementation(libs.googleMaps.android.compose)
         }
 
         commonMain.dependencies {

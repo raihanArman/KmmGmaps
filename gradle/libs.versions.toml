@@ -13,11 +13,13 @@ androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
 compose-plugin = "1.6.11"
 junit = "4.13.2"
-kotlin = "2.0.0"
+kotlin = "2.0.20"
 ktor = "2.3.12"
 compose-viewmodel = "2.8.0"
 jetbrains-navigation = "2.7.0-alpha07"
 appyx = "2.0.1"
+googleMaps-android-core = "19.0.0"
+googleMaps-android-compose = "5.0.4"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -43,6 +45,8 @@ jetbrains-navigation = { module = "org.jetbrains.androidx.navigation:navigation-
 appyx-navigation = { module = "com.bumble.appyx:appyx-navigation", version.ref = "appyx" }
 appyx-interactions = { module = "com.bumble.appyx:appyx-interactions", version.ref = "appyx" }
 appyx-backstack = { module = "com.bumble.appyx:backstack", version.ref = "appyx" }
+googleMaps-android-core = { module = "com.google.android.gms:play-services-maps", version.ref = "googleMaps-android-core" }
+googleMaps-android-compose = { module = "com.google.maps.android:maps-compose", version.ref = "googleMaps-android-compose" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -52,3 +56,4 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerializer = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlinAndroidParcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+nativeCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }

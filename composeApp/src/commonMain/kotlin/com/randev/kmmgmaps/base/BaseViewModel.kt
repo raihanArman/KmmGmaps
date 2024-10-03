@@ -17,7 +17,7 @@ abstract class BaseViewModel<MODEL, INTENT>(
     private val mutableStateData: MutableStateFlow<MODEL> = MutableStateFlow(defaultModel)
     val stateData = mutableStateData.asStateFlow()
 
-    abstract fun handleIntent(appIntent: AppIntent)
+    abstract fun handleIntent(appIntent: INTENT)
 
     fun updateModel(block: (MODEL) -> MODEL) {
         mutableStateData.update(block)
@@ -25,5 +25,15 @@ abstract class BaseViewModel<MODEL, INTENT>(
 
     fun restartState() {
         mutableStateData.value = defaultModel
+    }
+
+    fun data(check: (a: String) -> Unit) {
+
+    }
+
+    fun checl() {
+        data { a ->
+            val c = a
+        }
     }
 }

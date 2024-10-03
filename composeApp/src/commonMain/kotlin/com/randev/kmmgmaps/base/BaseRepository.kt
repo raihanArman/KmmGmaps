@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
+import kotlinx.serialization.json.Json
 
 /**
  * @author Raihan Arman
@@ -23,7 +24,9 @@ import kotlinx.coroutines.flow.onStart
 abstract class BaseRepository {
     private val client: HttpClient = HttpClient {
         install(ContentNegotiation) {
-            json()
+            json(Json {
+                ignoreUnknownKeys = true
+            })
         }
         install(Logging) {
             level = LogLevel.ALL

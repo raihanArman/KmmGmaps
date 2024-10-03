@@ -20,8 +20,11 @@ import com.bumble.appyx.navigation.composable.AppyxNavigationContainer
 import com.bumble.appyx.navigation.modality.NodeContext
 import com.bumble.appyx.navigation.node.Node
 import com.bumble.appyx.navigation.node.node
+import com.randev.kmmgmaps.feature.googlemaps.GoogleMapsScreen
+import com.randev.kmmgmaps.feature.main.MainScreen
+import com.randev.kmmgmaps.feature.reverse.ReversedLocationScreen
+import com.randev.kmmgmaps.feature.search.SearchLocation
 import com.randev.kmmgmaps.isAndroid
-import com.randev.kmmgmaps.screen.Screen1
 import com.randev.kmmgmaps.screen.Screen2
 import com.randev.kmmgmaps.screen.Screen3
 
@@ -33,7 +36,7 @@ class RootNode(
     nodeContext: NodeContext,
     private val backStack: BackStack<NavTarget> = BackStack(
         model = BackStackModel(
-            initialTarget = NavTarget.Screen1,
+            initialTarget = NavTarget.Main,
             savedStateMap = nodeContext.savedStateMap
         ),
         visualisation = {
@@ -82,7 +85,9 @@ class RootNode(
         return when(navTarget) {
             is NavTarget.Screen1 -> node(nodeContext) {
                 BoxBackground {
-                    Screen1()
+//                    SearchLocation()
+//                    Screen1()
+                    ReversedLocationScreen()
                 }
             }
             is NavTarget.Screen2 -> node(nodeContext) {
@@ -93,6 +98,24 @@ class RootNode(
             is NavTarget.Screen3 -> node(nodeContext) {
                 BoxBackground {
                     Screen3()
+                }
+            }
+
+            NavTarget.GoogleMaps -> node(nodeContext) {
+                BoxBackground {
+                    GoogleMapsScreen()
+                }
+            }
+
+            NavTarget.Main -> node(nodeContext) {
+                BoxBackground {
+                    MainScreen()
+                }
+            }
+
+            NavTarget.ReservedLocation -> node(nodeContext) {
+                BoxBackground {
+                    ReversedLocationScreen()
                 }
             }
         }
