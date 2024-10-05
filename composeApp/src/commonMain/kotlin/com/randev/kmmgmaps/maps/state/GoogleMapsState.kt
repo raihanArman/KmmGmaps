@@ -4,7 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import com.bumble.appyx.utils.multiplatform.Parcelable
+import com.bumble.appyx.utils.multiplatform.Parcelize
 import com.randev.kmmgmaps.maps.CameraCoordinate
+import com.randev.kmmgmaps.maps.GoogleMapsMarker
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -13,21 +16,41 @@ import kotlinx.coroutines.flow.StateFlow
  */
 interface GoogleMapsState {
     val cameraCoordinate: StateFlow<CameraCoordinate>
+    val markerList: StateFlow<List<GoogleMapsMarker>>
 
     fun animatedCamera(cameraCoordinate: CameraCoordinate)
     fun zoomIn()
     fun zoomOut()
 
+    fun addMarker(marker: GoogleMapsMarker)
+    fun removeMarker(marker: GoogleMapsMarker)
+
     companion object {
-        val Saver: Saver<GoogleMapsState, CameraCoordinate> = Saver(
+        val Saver: Saver<GoogleMapsState, GoogleMapsStateSaveable> = Saver(
             save = {
-                it.cameraCoordinate.value
+                val cameraCoordinate = it.cameraCoordinate.value
+                val markerList = it.markerList.value
+
+                GoogleMapsStateSaveable(
+                    cameraCoordinate, markerList
+                )
             },
             restore = {
-                buildGoogleMapsState(it)
+                val initialCameraCoordinate = it.cameraCoordinate
+                val initialMarkerList = it.markerList
+                GoogleMapsStateImpl(
+                    _initialCameraCoordinate = initialCameraCoordinate,
+                    _initialMarkerList = initialMarkerList
+                )
             }
         )
     }
+
+    @Parcelize
+    data class GoogleMapsStateSaveable(
+        val cameraCoordinate: CameraCoordinate,
+        val markerList: List<GoogleMapsMarker>
+    ): Parcelable
 }
 
 expect fun buildGoogleMapsState(initialCameraCoordinate: CameraCoordinate): GoogleMapsState
@@ -35,6 +58,6 @@ expect fun buildGoogleMapsState(initialCameraCoordinate: CameraCoordinate): Goog
 @Composable
 fun rememberGoogleMapsState(initialCameraCoordinate: CameraCoordinate): GoogleMapsState {
     return rememberSaveable(saver = GoogleMapsState.Saver) {
-        buildGoogleMapsState(initialCameraCoordinate)
+        GoogleMapsStateImpl(initialCameraCoordinate, emptyList())
     }
 }

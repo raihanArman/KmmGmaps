@@ -8,7 +8,9 @@ import androidx.compose.ui.Modifier
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberMarkerState
 import com.randev.kmmgmaps.maps.state.GoogleMapsState
 import com.randev.kmmgmaps.maps.state.GoogleMapsStateImpl
 import com.randev.kmmgmaps.maps.state.asImplement
@@ -26,6 +28,8 @@ actual fun GoogleMapsCompose(modifier: Modifier, googleMapsState: GoogleMapsStat
     val moveCamera by googleMapsState.asImplement().moveCameraCoordinate.collectAsState()
     val zoomCamera by googleMapsState.asImplement().zoomCamera.collectAsState()
     val isNeedZoom by googleMapsState.asImplement().isNeedZoom.collectAsState()
+
+    val markerList by googleMapsState.asImplement().markerList.collectAsState()
 
     LaunchedEffect(initialCamera) {
         val latLng = LatLng(
@@ -72,5 +76,18 @@ actual fun GoogleMapsCompose(modifier: Modifier, googleMapsState: GoogleMapsStat
     GoogleMap(
         modifier = modifier,
         cameraPositionState = androidCameraPositionState
-    )
+    ) {
+        for (marker in markerList) {
+            val markerState = rememberMarkerState(
+                position = LatLng(
+                    marker.coordinate.latitude,
+                    marker.coordinate.longitude
+                )
+            )
+            Marker(
+                state = markerState,
+                title = marker.title
+            )
+        }
+    }
 }

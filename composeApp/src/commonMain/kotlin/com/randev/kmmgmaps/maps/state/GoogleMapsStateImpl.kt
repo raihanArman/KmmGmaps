@@ -1,6 +1,7 @@
 package com.randev.kmmgmaps.maps.state
 
 import com.randev.kmmgmaps.maps.CameraCoordinate
+import com.randev.kmmgmaps.maps.GoogleMapsMarker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -17,6 +18,7 @@ import kotlin.coroutines.CoroutineContext
  */
 class GoogleMapsStateImpl(
     private val _initialCameraCoordinate: CameraCoordinate,
+    private val _initialMarkerList: List<GoogleMapsMarker>
 ): GoogleMapsState {
     val initialCameraCoordinate: MutableStateFlow<CameraCoordinate> get() = MutableStateFlow(_initialCameraCoordinate.copy())
 
@@ -30,13 +32,16 @@ class GoogleMapsStateImpl(
     override val cameraCoordinate: StateFlow<CameraCoordinate>
         get() = _savedCameraCoordinate
 
+    private val _markerList: MutableStateFlow<List<GoogleMapsMarker>> = MutableStateFlow(_initialMarkerList)
+    override val markerList: StateFlow<List<GoogleMapsMarker>>
+        get() = _markerList
+
     val zoomCamera: MutableStateFlow<Float> = MutableStateFlow(0f)
     val isNeedZoom: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     private val scope = object : CoroutineScope {
         override val coroutineContext: CoroutineContext
             get() = SupervisorJob() + Dispatchers.Default
-
     }
 
     override fun animatedCamera(cameraCoordinate: CameraCoordinate) {
@@ -85,6 +90,26 @@ class GoogleMapsStateImpl(
 
             delay(60)
             isNeedZoom.update { false }
+        }
+    }
+
+    override fun addMarker(marker: GoogleMapsMarker) {
+        _markerList.update { currentMarker ->
+            if (!currentMarker.contains(marker)) {
+                currentMarker + marker
+            } else {
+                currentMarker
+            }
+        }
+    }
+
+    override fun removeMarker(marker: GoogleMapsMarker) {
+        _markerList.update { currentMarker ->
+            if (currentMarker.contains(marker)) {
+                currentMarker - marker
+            } else {
+                currentMarker
+            }
         }
     }
 

@@ -18,6 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.randev.kmmgmaps.maps.CameraCoordinate
 import com.randev.kmmgmaps.maps.GoogleMapsCompose
+import com.randev.kmmgmaps.maps.GoogleMapsMarker
+import com.randev.kmmgmaps.maps.rememberLocationService
 import com.randev.kmmgmaps.maps.state.buildGoogleMapsState
 import com.randev.kmmgmaps.maps.state.rememberGoogleMapsState
 import com.randev.kmmgmaps.navigation.appyx.LocalNavigator
@@ -33,6 +35,7 @@ val makassar = Coordinate(-5.124287, 119.489632)
 @Composable
 fun GoogleMapsScreen() {
     val navigator = LocalNavigator.current
+    val locationService = rememberLocationService()
 
     val googleMapsState = rememberGoogleMapsState(
         CameraCoordinate(
@@ -71,9 +74,16 @@ fun GoogleMapsScreen() {
                             zoom = 16f
                         )
                     )
+
+                    googleMapsState.addMarker(
+                        GoogleMapsMarker(
+                            coordinate = pamulangCoordinate,
+                            title = "Pamulang"
+                        )
+                    )
                 }
             ) {
-                Text("Move Camera to pamulang")
+                Text("Move Camera to pamulang and add marker")
             }
 
             Button(
@@ -83,9 +93,29 @@ fun GoogleMapsScreen() {
                             coordinate = makassar,
                         )
                     )
+
+                    googleMapsState.addMarker(
+                        GoogleMapsMarker(
+                            coordinate = makassar,
+                            title = "Makassar"
+                        )
+                    )
                 }
             ) {
-                Text("Move Camera to makassar")
+                Text("Move Camera to makassar and add marker")
+            }
+
+            Button(
+                onClick = {
+                    googleMapsState.removeMarker(
+                        GoogleMapsMarker(
+                            coordinate = makassar,
+                            title = "Makassar"
+                        )
+                    )
+                }
+            ) {
+                Text("Remove makassar marker")
             }
 
             Button(

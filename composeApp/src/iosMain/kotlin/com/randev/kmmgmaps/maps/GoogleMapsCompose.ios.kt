@@ -9,12 +9,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.interop.UIKitView
 import cocoapods.GoogleMaps.GMSCameraPosition
 import cocoapods.GoogleMaps.GMSMapView
+import cocoapods.GoogleMaps.GMSMarker
 import cocoapods.GoogleMaps.animateToCameraPosition
 import cocoapods.GoogleMaps.animateToZoom
 import com.randev.kmmgmaps.maps.state.GoogleMapsState
 import com.randev.kmmgmaps.maps.state.GoogleMapsStateImpl
 import com.randev.kmmgmaps.maps.state.asImplement
 import kotlinx.cinterop.ExperimentalForeignApi
+import platform.CoreLocation.CLLocationCoordinate2DMake
 
 /**
  * @author Raihan Arman
@@ -30,6 +32,7 @@ actual fun GoogleMapsCompose(modifier: Modifier, googleMapsState: GoogleMapsStat
 
     val zoomCamera by googleMapsState.asImplement().zoomCamera.collectAsState()
     val isNeedZoom by googleMapsState.asImplement().isNeedZoom.collectAsState()
+    val markerList by googleMapsState.asImplement().markerList.collectAsState()
 
     LaunchedEffect(googleMapsView) {
         googleMapsView.delegate = googleMapsDelegate
@@ -49,6 +52,20 @@ actual fun GoogleMapsCompose(modifier: Modifier, googleMapsState: GoogleMapsStat
     LaunchedEffect(zoomCamera) {
         if (isNeedZoom) {
             googleMapsView.animateToZoom(zoomCamera)
+        }
+    }
+
+    LaunchedEffect(markerList) {
+        googleMapsView.clear()
+        for (marker in markerList) {
+            val gmsMarker = GMSMarker()
+            gmsMarker.setPosition(CLLocationCoordinate2DMake(
+                latitude = marker.coordinate.latitude,
+                longitude = marker.coordinate.longitude
+            ))
+
+            gmsMarker.title = marker.title
+            gmsMarker.map = googleMapsView
         }
     }
 
