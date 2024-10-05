@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import com.google.android.gms.location.FusedLocationProviderClient
 
 /**
  * @author Raihan Arman
@@ -16,8 +18,9 @@ import androidx.compose.ui.Modifier
  */
 @Composable
 actual fun rememberLocationService(): LocationService {
+    val androidContext = LocalContext.current
     val androidLocationService = remember {
-        AndroidLocationService()
+        AndroidLocationService(androidContext)
     }
 
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()

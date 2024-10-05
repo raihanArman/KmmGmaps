@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
@@ -21,7 +22,11 @@ import com.randev.kmmgmaps.network.data.Coordinate
  * @date 01/10/24
  */
 @Composable
-actual fun GoogleMapsCompose(modifier: Modifier, googleMapsState: GoogleMapsState) {
+actual fun GoogleMapsCompose(
+    modifier: Modifier,
+    googleMapsState: GoogleMapsState,
+    isMyLocationEnable: Boolean
+) {
     val androidCameraPositionState = rememberCameraPositionState()
 
     val initialCamera by googleMapsState.asImplement().initialCameraCoordinate.collectAsState()
@@ -30,6 +35,10 @@ actual fun GoogleMapsCompose(modifier: Modifier, googleMapsState: GoogleMapsStat
     val isNeedZoom by googleMapsState.asImplement().isNeedZoom.collectAsState()
 
     val markerList by googleMapsState.asImplement().markerList.collectAsState()
+
+    LaunchedEffect(Unit) {
+        googleMapsState.asImplement().setMapLoaded(false)
+    }
 
     LaunchedEffect(initialCamera) {
         val latLng = LatLng(
@@ -42,6 +51,7 @@ actual fun GoogleMapsCompose(modifier: Modifier, googleMapsState: GoogleMapsStat
     }
 
     LaunchedEffect(moveCamera) {
+        println("Ampas kuda ->>> MOVE CAMERA $moveCamera")
         if (!moveCamera.isZeroCoordinate()) {
             val latLng = LatLng(
                 moveCamera.coordinate.latitude,
@@ -75,7 +85,13 @@ actual fun GoogleMapsCompose(modifier: Modifier, googleMapsState: GoogleMapsStat
 
     GoogleMap(
         modifier = modifier,
-        cameraPositionState = androidCameraPositionState
+        cameraPositionState = androidCameraPositionState,
+        onMapLoaded = {
+            googleMapsState.asImplement().setMapLoaded(true)
+        },
+        properties = MapProperties(
+            isMyLocationEnabled = isMyLocationEnable
+        )
     ) {
         for (marker in markerList) {
             val markerState = rememberMarkerState(

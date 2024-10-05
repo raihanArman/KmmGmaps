@@ -19,7 +19,7 @@ import kotlin.coroutines.CoroutineContext
 class GoogleMapsStateImpl(
     private val _initialCameraCoordinate: CameraCoordinate,
     private val _initialMarkerList: List<GoogleMapsMarker>
-): GoogleMapsState {
+): GoogleMapsState{
     val initialCameraCoordinate: MutableStateFlow<CameraCoordinate> get() = MutableStateFlow(_initialCameraCoordinate.copy())
 
     val moveCameraCoordinate: MutableStateFlow<CameraCoordinate> = MutableStateFlow(
@@ -35,6 +35,10 @@ class GoogleMapsStateImpl(
     private val _markerList: MutableStateFlow<List<GoogleMapsMarker>> = MutableStateFlow(_initialMarkerList)
     override val markerList: StateFlow<List<GoogleMapsMarker>>
         get() = _markerList
+
+    private val _mapLoaded: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    override val mapLoaded: StateFlow<Boolean>
+        get() = _mapLoaded
 
     val zoomCamera: MutableStateFlow<Float> = MutableStateFlow(0f)
     val isNeedZoom: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -117,6 +121,10 @@ class GoogleMapsStateImpl(
         _savedCameraCoordinate.update {
             cameraCoordinate
         }
+    }
+
+    fun setMapLoaded(mapLoaded: Boolean) {
+        _mapLoaded.update { mapLoaded }
     }
 }
 

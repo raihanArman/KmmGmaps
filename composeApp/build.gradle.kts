@@ -82,6 +82,8 @@ kotlin {
 
             implementation(libs.googleMaps.android.core)
             implementation(libs.googleMaps.android.compose)
+            implementation(libs.android.play.service.location)
+
         }
 
         commonMain.dependencies {

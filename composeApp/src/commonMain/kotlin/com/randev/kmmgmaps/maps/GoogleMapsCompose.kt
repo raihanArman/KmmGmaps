@@ -10,4 +10,8 @@ import com.randev.kmmgmaps.maps.state.GoogleMapsState
  */
 
 @Composable
-expect fun GoogleMapsCompose(modifier: Modifier, googleMapsState: GoogleMapsState)
+expect fun GoogleMapsCompose(
+    modifier: Modifier,
+    googleMapsState: GoogleMapsState,
+    isMyLocationEnable: Boolean
+)

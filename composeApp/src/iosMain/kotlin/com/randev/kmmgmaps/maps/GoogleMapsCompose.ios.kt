@@ -24,7 +24,11 @@ import platform.CoreLocation.CLLocationCoordinate2DMake
  */
 @OptIn(ExperimentalForeignApi::class)
 @Composable
-actual fun GoogleMapsCompose(modifier: Modifier, googleMapsState: GoogleMapsState) {
+actual fun GoogleMapsCompose(
+    modifier: Modifier,
+    googleMapsState: GoogleMapsState,
+    isMyLocationEnable: Boolean
+) {
     val googleMapsView = remember { GMSMapView() }
     val googleMapsDelegate = remember { IosGoogleMapsDelegate(googleMapsState as GoogleMapsStateImpl) }
     val initialCamera by googleMapsState.asImplement().initialCameraCoordinate.collectAsState()

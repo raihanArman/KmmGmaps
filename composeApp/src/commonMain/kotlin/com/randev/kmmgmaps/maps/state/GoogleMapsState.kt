@@ -18,6 +18,8 @@ interface GoogleMapsState {
     val cameraCoordinate: StateFlow<CameraCoordinate>
     val markerList: StateFlow<List<GoogleMapsMarker>>
 
+    val mapLoaded: StateFlow<Boolean>
+
     fun animatedCamera(cameraCoordinate: CameraCoordinate)
     fun zoomIn()
     fun zoomOut()

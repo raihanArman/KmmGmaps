@@ -39,15 +39,28 @@ fun GoogleMapsScreen() {
 
     val googleMapsState = rememberGoogleMapsState(
         CameraCoordinate(
-            coordinate = Coordinate(-6.3999693, 106.8030776),
+            coordinate = Coordinate(0.0, 0.0),
             zoom = 16f
         )
     )
 
-    val savedCameraCoordinate by googleMapsState.cameraCoordinate.collectAsState()
+//    val savedCameraCoordinate by googleMapsState.cameraCoordinate.collectAsState()
+//
+//    LaunchedEffect(savedCameraCoordinate) {
+//        println("Ampas kuda -> ${savedCameraCoordinate.coordinate}")
+//    }
 
-    LaunchedEffect(savedCameraCoordinate) {
-        println("Ampas kuda -> ${savedCameraCoordinate.coordinate}")
+    val isMapLoaded by googleMapsState.mapLoaded.collectAsState()
+    val myLocation by locationService.myLocation.collectAsState()
+
+    LaunchedEffect(myLocation, isMapLoaded) {
+        if (isMapLoaded) {
+            googleMapsState.animatedCamera(
+                cameraCoordinate = CameraCoordinate(
+                    coordinate = myLocation
+                )
+            )
+        }
     }
 
     Box(
@@ -55,7 +68,8 @@ fun GoogleMapsScreen() {
     ) {
         GoogleMapsCompose(
             modifier = Modifier.fillMaxSize(),
-            googleMapsState = googleMapsState
+            googleMapsState = googleMapsState,
+            isMyLocationEnable = myLocation.latitude != 0.0
         )
 
         Column(
