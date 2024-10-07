@@ -27,7 +27,7 @@ import platform.CoreLocation.CLLocationCoordinate2DMake
 actual fun GoogleMapsCompose(
     modifier: Modifier,
     googleMapsState: GoogleMapsState,
-    isMyLocationEnable: Boolean
+    mapSettings: MapSettings
 ) {
     val googleMapsView = remember { GMSMapView() }
     val googleMapsDelegate = remember { IosGoogleMapsDelegate(googleMapsState as GoogleMapsStateImpl) }
@@ -46,8 +46,16 @@ actual fun GoogleMapsCompose(
         googleMapsView.delegate = googleMapsDelegate
     }
 
-    LaunchedEffect(isMyLocationEnable) {
-        googleMapsView.myLocationEnabled = isMyLocationEnable
+    LaunchedEffect(mapSettings) {
+        googleMapsView.myLocationEnabled = mapSettings.myLocationEnabled
+    }
+
+    LaunchedEffect(mapSettings) {
+        googleMapsView.settings().myLocationButton = mapSettings.myLocationButtonEnabled
+    }
+
+    LaunchedEffect(mapSettings) {
+        googleMapsView.settings().compassButton = mapSettings.composeEnabled
     }
 
     LaunchedEffect(moveCamera) {

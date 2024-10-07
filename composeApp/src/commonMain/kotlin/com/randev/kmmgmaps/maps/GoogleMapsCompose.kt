@@ -13,5 +13,5 @@ import com.randev.kmmgmaps.maps.state.GoogleMapsState
 expect fun GoogleMapsCompose(
     modifier: Modifier,
     googleMapsState: GoogleMapsState,
-    isMyLocationEnable: Boolean
+    mapSettings: MapSettings = MapSettings()
 )

@@ -9,6 +9,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
@@ -25,7 +26,7 @@ import com.randev.kmmgmaps.network.data.Coordinate
 actual fun GoogleMapsCompose(
     modifier: Modifier,
     googleMapsState: GoogleMapsState,
-    isMyLocationEnable: Boolean
+    mapSettings: MapSettings
 ) {
     val androidCameraPositionState = rememberCameraPositionState()
 
@@ -90,7 +91,11 @@ actual fun GoogleMapsCompose(
             googleMapsState.asImplement().setMapLoaded(true)
         },
         properties = MapProperties(
-            isMyLocationEnabled = isMyLocationEnable
+            isMyLocationEnabled = mapSettings.myLocationEnabled
+        ),
+        uiSettings = MapUiSettings(
+            myLocationButtonEnabled = mapSettings.myLocationButtonEnabled,
+            compassEnabled = mapSettings.composeEnabled
         )
     ) {
         for (marker in markerList) {

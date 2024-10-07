@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 import com.randev.kmmgmaps.maps.CameraCoordinate
 import com.randev.kmmgmaps.maps.GoogleMapsCompose
 import com.randev.kmmgmaps.maps.GoogleMapsMarker
+import com.randev.kmmgmaps.maps.MapSettings
 import com.randev.kmmgmaps.maps.rememberLocationService
-import com.randev.kmmgmaps.maps.state.buildGoogleMapsState
 import com.randev.kmmgmaps.maps.state.rememberGoogleMapsState
 import com.randev.kmmgmaps.navigation.appyx.LocalNavigator
 import com.randev.kmmgmaps.navigation.appyx.NavTarget
@@ -39,7 +39,7 @@ fun GoogleMapsScreen() {
 
     val googleMapsState = rememberGoogleMapsState(
         CameraCoordinate(
-            coordinate = Coordinate(0.0, 0.0),
+            coordinate = makassar,
             zoom = 16f
         )
     )
@@ -69,7 +69,11 @@ fun GoogleMapsScreen() {
         GoogleMapsCompose(
             modifier = Modifier.fillMaxSize(),
             googleMapsState = googleMapsState,
-            isMyLocationEnable = myLocation.latitude != 0.0
+            mapSettings = MapSettings(
+                myLocationEnabled = myLocation.latitude != 0.0,
+                composeEnabled = true,
+                myLocationButtonEnabled = true
+            )
         )
 
         Column(
