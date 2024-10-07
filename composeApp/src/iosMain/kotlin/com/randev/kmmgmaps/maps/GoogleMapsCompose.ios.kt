@@ -38,8 +38,16 @@ actual fun GoogleMapsCompose(
     val isNeedZoom by googleMapsState.asImplement().isNeedZoom.collectAsState()
     val markerList by googleMapsState.asImplement().markerList.collectAsState()
 
+    LaunchedEffect(Unit) {
+        googleMapsState.asImplement().setMapLoaded(false)
+    }
+
     LaunchedEffect(googleMapsView) {
         googleMapsView.delegate = googleMapsDelegate
+    }
+
+    LaunchedEffect(isMyLocationEnable) {
+        googleMapsView.myLocationEnabled = isMyLocationEnable
     }
 
     LaunchedEffect(moveCamera) {

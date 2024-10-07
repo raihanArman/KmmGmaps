@@ -29,4 +29,8 @@ class IosGoogleMapsDelegate(
         stateImpl.saveCameraPosition(cameraCoordinate = CameraCoordinate(coordinate, zoom))
         println("Ampas kuda -> zoom $zoom | coordinate $coordinate")
     }
+
+    override fun mapViewDidFinishTileRendering(mapView: GMSMapView) {
+        stateImpl.setMapLoaded(true)
+    }
 }
