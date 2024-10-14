@@ -4,9 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraMoveStartedReason
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
@@ -36,6 +38,16 @@ actual fun GoogleMapsCompose(
     val isNeedZoom by googleMapsState.asImplement().isNeedZoom.collectAsState()
 
     val markerList by googleMapsState.asImplement().markerList.collectAsState()
+
+    val gestureManager = remember {
+        GestureManager()
+    }
+
+    val gesture by gestureManager.gesture.collectAsState()
+
+    LaunchedEffect(gesture) {
+        println("gesture: $gesture")
+    }
 
     LaunchedEffect(Unit) {
         googleMapsState.asImplement().setMapLoaded(false)
@@ -74,6 +86,9 @@ actual fun GoogleMapsCompose(
 
         val stateImpl = googleMapsState as GoogleMapsStateImpl
         stateImpl.saveCameraPosition(cameraCoordinate)
+
+        // Gesture Manager
+        gestureManager.setCoordinate(coordinate)
     }
 
     LaunchedEffect(zoomCamera) {
@@ -82,6 +97,13 @@ actual fun GoogleMapsCompose(
                 CameraUpdateFactory.zoomTo(zoomCamera)
             )
         }
+    }
+
+    LaunchedEffect(androidCameraPositionState.isMoving) {
+        val isGestureReason = androidCameraPositionState.cameraMoveStartedReason == CameraMoveStartedReason.GESTURE
+        val isMoveFromInput = androidCameraPositionState.isMoving && isGestureReason
+
+        gestureManager.setIsMoving(isMoveFromInput)
     }
 
     GoogleMap(

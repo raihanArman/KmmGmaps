@@ -39,7 +39,7 @@ fun GoogleMapsScreen() {
 
     val googleMapsState = rememberGoogleMapsState(
         CameraCoordinate(
-            coordinate = makassar,
+            coordinate = Coordinate(0.0,0.0),
             zoom = 16f
         )
     )

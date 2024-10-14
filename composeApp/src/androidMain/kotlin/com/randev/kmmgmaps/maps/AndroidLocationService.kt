@@ -75,13 +75,16 @@ class AndroidLocationService(
                 .addOnCompleteListener { task ->
                     if (task.exception == null) {
                         val location = task.result
-                        val coordinate = Coordinate(
-                            latitude = location.latitude,
-                            longitude = location.longitude
-                        )
+                        if (location != null) {
+                            val coordinate = Coordinate(
+                                latitude = location.latitude,
+                                longitude = location.longitude
+                            )
 
-                        _myLocation.update { coordinate }
+                            _myLocation.update { coordinate }
+                        }
                     }
+
                 }
         }
     }
