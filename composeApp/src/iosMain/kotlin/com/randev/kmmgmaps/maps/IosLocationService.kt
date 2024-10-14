@@ -37,6 +37,7 @@ class IosLocationService : LocationService {
             when (didChangeAuthorizationStatus) {
                 kCLAuthorizationStatusNotDetermined, kCLAuthorizationStatusDenied -> {
                     // not granted
+                    println("permission not granted...")
                     manager.requestWhenInUseAuthorization()
                 }
                 kCLAuthorizationStatusAuthorizedAlways, kCLAuthorizationStatusAuthorizedWhenInUse, kCLAuthorizationStatusRestricted -> {
@@ -62,6 +63,7 @@ class IosLocationService : LocationService {
     }
 
     override suspend fun getMyLocation() {
+        println("get my location")
         val locationManager = CLLocationManager()
         locationManager.delegate = iosLocationDelegate
         locationManager.requestWhenInUseAuthorization()

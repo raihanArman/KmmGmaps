@@ -8,6 +8,7 @@ import com.bumble.appyx.utils.multiplatform.Parcelable
 import com.bumble.appyx.utils.multiplatform.Parcelize
 import com.randev.kmmgmaps.maps.CameraCoordinate
 import com.randev.kmmgmaps.maps.GoogleMapsMarker
+import com.randev.kmmgmaps.maps.MoveGesture
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -19,6 +20,8 @@ interface GoogleMapsState {
     val markerList: StateFlow<List<GoogleMapsMarker>>
 
     val mapLoaded: StateFlow<Boolean>
+
+    val gesture: StateFlow<MoveGesture>
 
     fun animatedCamera(cameraCoordinate: CameraCoordinate)
     fun zoomIn()

@@ -7,5 +7,5 @@ import com.randev.kmmgmaps.maps.CameraCoordinate
  * @date 02/10/24
  */
 actual fun buildGoogleMapsState(initialCameraCoordinate: CameraCoordinate): GoogleMapsState {
-    return GoogleMapsStateImpl(initialCameraCoordinate)
+    return GoogleMapsStateImpl(initialCameraCoordinate, emptyList())
 }

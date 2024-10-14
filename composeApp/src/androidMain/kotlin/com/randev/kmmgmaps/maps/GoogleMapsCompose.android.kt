@@ -46,7 +46,7 @@ actual fun GoogleMapsCompose(
     val gesture by gestureManager.gesture.collectAsState()
 
     LaunchedEffect(gesture) {
-        println("gesture: $gesture")
+        googleMapsState.asImplement().setMoveGesture(gesture)
     }
 
     LaunchedEffect(Unit) {

@@ -53,6 +53,12 @@ fun GoogleMapsScreen() {
     val isMapLoaded by googleMapsState.mapLoaded.collectAsState()
     val myLocation by locationService.myLocation.collectAsState()
 
+    val gesture by googleMapsState.gesture.collectAsState()
+
+    LaunchedEffect(gesture) {
+        println("Ampas kuda -> gesture $gesture")
+    }
+
     LaunchedEffect(myLocation, isMapLoaded) {
         if (isMapLoaded) {
             googleMapsState.animatedCamera(
@@ -61,6 +67,10 @@ fun GoogleMapsScreen() {
                 )
             )
         }
+    }
+
+    LaunchedEffect(Unit) {
+        locationService.getMyLocation()
     }
 
     Box(

@@ -30,13 +30,23 @@ actual fun GoogleMapsCompose(
     mapSettings: MapSettings
 ) {
     val googleMapsView = remember { GMSMapView() }
-    val googleMapsDelegate = remember { IosGoogleMapsDelegate(googleMapsState as GoogleMapsStateImpl) }
+    val gestureManager = remember { GestureManager() }
+    val googleMapsDelegate = remember { IosGoogleMapsDelegate(
+        googleMapsState as GoogleMapsStateImpl,
+        gestureManager
+    ) }
     val initialCamera by googleMapsState.asImplement().initialCameraCoordinate.collectAsState()
     val moveCamera by googleMapsState.asImplement().moveCameraCoordinate.collectAsState()
 
     val zoomCamera by googleMapsState.asImplement().zoomCamera.collectAsState()
     val isNeedZoom by googleMapsState.asImplement().isNeedZoom.collectAsState()
     val markerList by googleMapsState.asImplement().markerList.collectAsState()
+
+    val gesture by gestureManager.gesture.collectAsState()
+
+    LaunchedEffect(gesture) {
+        googleMapsState.asImplement().setMoveGesture(gesture)
+    }
 
     LaunchedEffect(Unit) {
         googleMapsState.asImplement().setMapLoaded(false)

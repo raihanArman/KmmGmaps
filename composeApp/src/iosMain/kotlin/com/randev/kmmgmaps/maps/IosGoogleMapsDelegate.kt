@@ -15,8 +15,10 @@ import platform.darwin.NSObject
  */
 @OptIn(ExperimentalForeignApi::class)
 class IosGoogleMapsDelegate(
-    private val stateImpl: GoogleMapsStateImpl
+    private val stateImpl: GoogleMapsStateImpl,
+    private val gestureManager: GestureManager
 ): NSObject(), GMSMapViewDelegateProtocol {
+
     override fun mapView(mapView: GMSMapView, didChangeCameraPosition: GMSCameraPosition) {
         val coordinate = didChangeCameraPosition.target.useContents {
             Coordinate(
@@ -28,6 +30,12 @@ class IosGoogleMapsDelegate(
         val zoom = didChangeCameraPosition.zoom
         stateImpl.saveCameraPosition(cameraCoordinate = CameraCoordinate(coordinate, zoom))
         println("Ampas kuda -> zoom $zoom | coordinate $coordinate")
+
+        gestureManager.setCoordinate(coordinate)
+    }
+
+    override fun mapView(mapView: GMSMapView, willMove: Boolean) {
+        gestureManager.setIsMoving(willMove)
     }
 
     override fun mapViewDidFinishTileRendering(mapView: GMSMapView) {

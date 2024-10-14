@@ -2,6 +2,7 @@ package com.randev.kmmgmaps.maps.state
 
 import com.randev.kmmgmaps.maps.CameraCoordinate
 import com.randev.kmmgmaps.maps.GoogleMapsMarker
+import com.randev.kmmgmaps.maps.MoveGesture
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -39,6 +40,10 @@ class GoogleMapsStateImpl(
     private val _mapLoaded: MutableStateFlow<Boolean> = MutableStateFlow(false)
     override val mapLoaded: StateFlow<Boolean>
         get() = _mapLoaded
+
+    private val _gesture: MutableStateFlow<MoveGesture> = MutableStateFlow(MoveGesture.MoveNotStarted)
+    override val gesture: StateFlow<MoveGesture>
+        get() = _gesture
 
     val zoomCamera: MutableStateFlow<Float> = MutableStateFlow(0f)
     val isNeedZoom: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -125,6 +130,10 @@ class GoogleMapsStateImpl(
 
     fun setMapLoaded(mapLoaded: Boolean) {
         _mapLoaded.update { mapLoaded }
+    }
+
+    fun setMoveGesture(gesture: MoveGesture) {
+        _gesture.update { gesture }
     }
 }
 

@@ -22,7 +22,7 @@ class GestureManager(
 ) {
     private val coordinate = MutableStateFlow(Coordinate())
 
-    private val _gesture: MutableStateFlow<MoveGesture> = MutableStateFlow(MoveGesture.MoveStart)
+    private val _gesture: MutableStateFlow<MoveGesture> = MutableStateFlow(MoveGesture.MoveNotStarted)
     val gesture: MutableStateFlow<MoveGesture> get() = _gesture
 
     private val scope = object : CoroutineScope {
