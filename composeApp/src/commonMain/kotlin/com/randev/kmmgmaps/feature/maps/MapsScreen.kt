@@ -62,6 +62,7 @@ import com.randev.kmmgmaps.feature.maps.component.ItemPlace
 import com.randev.kmmgmaps.feature.maps.component.SearchBarPlace
 import com.randev.kmmgmaps.isKeyboardOpen
 import com.randev.kmmgmaps.maps.CameraCoordinate
+import com.randev.kmmgmaps.maps.DefaultMapsPadding
 import com.randev.kmmgmaps.maps.GoogleMapsCompose
 import com.randev.kmmgmaps.maps.GoogleMapsMarker
 import com.randev.kmmgmaps.maps.LocationService
@@ -143,11 +144,7 @@ fun MapsScreen(
             mapSettings = MapSettings(
                 myLocationEnabled = myLocation.latitude != 0.0,
                 composeEnabled = true,
-                padding = PaddingValues(
-                    top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
-                    bottom = WindowInsets.ime.asPaddingValues().calculateBottomPadding() -
-                            WindowInsets.systemGestures.asPaddingValues().calculateBottomPadding()
-                )
+                padding = DefaultMapsPadding
             ),
             onMarkerClick = { marker ->
                 viewModel.handleIntent(MapsIntent.SetSelectedMarker(marker))

@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.interop.UIKitView
+import androidx.compose.ui.platform.LocalLayoutDirection
 import cocoapods.GoogleMaps.GMSCameraPosition
 import cocoapods.GoogleMaps.GMSMapView
 import cocoapods.GoogleMaps.GMSMarker
@@ -17,6 +18,7 @@ import com.randev.kmmgmaps.maps.state.GoogleMapsStateImpl
 import com.randev.kmmgmaps.maps.state.asImplement
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreLocation.CLLocationCoordinate2DMake
+import platform.UIKit.UIEdgeInsetsMake
 
 /**
  * @author Raihan Arman
@@ -58,8 +60,17 @@ actual fun GoogleMapsCompose(
         googleMapsView.delegate = googleMapsDelegate
     }
 
+    val layoutDirection = LocalLayoutDirection.current
     LaunchedEffect(mapSettings) {
         googleMapsView.myLocationEnabled = mapSettings.myLocationEnabled
+        googleMapsView.padding = mapSettings.padding.run {
+            UIEdgeInsetsMake(
+                top = calculateTopPadding().value.toDouble(),
+                bottom = calculateBottomPadding().value.toDouble(),
+                right = calculateRightPadding(layoutDirection).value.toDouble(),
+                left = calculateLeftPadding(layoutDirection).value.toDouble()
+            )
+        }
     }
 
     LaunchedEffect(mapSettings) {
