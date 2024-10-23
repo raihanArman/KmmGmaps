@@ -3,6 +3,7 @@ package com.randev.kmmgmaps.feature.maps
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.randev.kmmgmaps.base.BaseViewModel
+import com.randev.kmmgmaps.maps.GoogleMapsMarker
 import com.randev.kmmgmaps.network.LocationRepository
 import com.randev.kmmgmaps.network.State
 import com.randev.kmmgmaps.network.data.Coordinate
@@ -31,6 +32,7 @@ sealed class MapsIntent {
     data class SetIsShowSearch(val isShowSearch: Boolean): MapsIntent()
     data object ObserverQuery: MapsIntent()
     data class SetMyCoordinate(val coordinate: Coordinate): MapsIntent()
+    data class SetSelectedMarker(val marker: GoogleMapsMarker): MapsIntent()
 }
 
 class MapsViewModel: BaseViewModel<MapsState, MapsIntent>(
@@ -57,6 +59,22 @@ class MapsViewModel: BaseViewModel<MapsState, MapsIntent>(
 
             MapsIntent.ObserverQuery -> {
                 observerQuery()
+            }
+
+            is MapsIntent.SetSelectedMarker -> {
+                setSelectedMarker(appIntent.marker)
+            }
+        }
+    }
+
+    private fun setSelectedMarker(marker: GoogleMapsMarker) {
+        val selectedPlace = stateData.value.placeState
+        if (selectedPlace is State.Success) {
+            val places = selectedPlace.data
+            val place = places.find { marker.coordinate.toString() == it.coordinate.toString() }
+
+            if (place != null) {
+                setSelectedPlace(place)
             }
         }
     }

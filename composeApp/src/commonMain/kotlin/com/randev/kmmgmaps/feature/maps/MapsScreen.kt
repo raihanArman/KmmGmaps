@@ -122,15 +122,6 @@ fun MapsScreen(
                     coordinate = model.selectedPlace.coordinate, zoom = 14f
                 )
             )
-
-            mapsState.removeAllMarker()
-            delay(400)
-
-            mapsState.addMarker(
-                marker = GoogleMapsMarker(
-                    coordinate = model.selectedPlace.coordinate
-                )
-            )
         }
     }
 
@@ -146,7 +137,10 @@ fun MapsScreen(
             mapSettings = MapSettings(
                 myLocationEnabled = myLocation.latitude != 0.0,
                 composeEnabled = true,
-            )
+            ),
+            onMarkerClick = { marker ->
+                viewModel.handleIntent(MapsIntent.SetSelectedMarker(marker))
+            }
         )
 
         Box(
@@ -180,6 +174,15 @@ fun MapsScreen(
                             Text(text = it.message.orEmpty(), color = Color.Red)
                         }
                         onSuccess { places ->
+                            LaunchedEffect(places) {
+                                for (place in places) {
+                                    mapsState.addMarker(
+                                        marker = GoogleMapsMarker(
+                                            coordinate = place.coordinate
+                                        )
+                                    )
+                                }
+                            }
                             for (place in places) {
                                 ItemPlace(place) {
                                     keyboardController?.hide()

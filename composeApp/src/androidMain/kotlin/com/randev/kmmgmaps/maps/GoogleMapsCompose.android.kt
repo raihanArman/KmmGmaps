@@ -34,7 +34,8 @@ import com.randev.kmmgmaps.network.data.Coordinate
 actual fun GoogleMapsCompose(
     modifier: Modifier,
     googleMapsState: GoogleMapsState,
-    mapSettings: MapSettings
+    mapSettings: MapSettings,
+    onMarkerClick: (GoogleMapsMarker) -> Unit
 ) {
     val androidCameraPositionState = rememberCameraPositionState()
 
@@ -136,8 +137,23 @@ actual fun GoogleMapsCompose(
             )
             Marker(
                 state = markerState,
-                title = marker.title
+                title = marker.title,
+                onClick = { androidMarker ->
+                    val googleMapsMarker = markerList.find {
+                        it.coordinate.toString() == androidMarker.position
+                            .asString()
+                    }
+
+                    if (googleMapsMarker != null) {
+                        onMarkerClick.invoke(googleMapsMarker)
+                    }
+                    true
+                }
             )
         }
     }
+}
+
+fun LatLng.asString(): String {
+    return "$latitude,$longitude"
 }

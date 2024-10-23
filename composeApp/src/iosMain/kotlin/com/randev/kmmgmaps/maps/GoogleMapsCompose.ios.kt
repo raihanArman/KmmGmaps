@@ -27,7 +27,8 @@ import platform.CoreLocation.CLLocationCoordinate2DMake
 actual fun GoogleMapsCompose(
     modifier: Modifier,
     googleMapsState: GoogleMapsState,
-    mapSettings: MapSettings
+    mapSettings: MapSettings,
+    onMarkerClick: (GoogleMapsMarker) -> Unit
 ) {
     val googleMapsView = remember { GMSMapView() }
     val gestureManager = remember { GestureManager() }

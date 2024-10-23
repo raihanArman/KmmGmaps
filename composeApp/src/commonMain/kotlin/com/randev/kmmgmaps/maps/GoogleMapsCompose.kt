@@ -13,5 +13,6 @@ import com.randev.kmmgmaps.maps.state.GoogleMapsState
 expect fun GoogleMapsCompose(
     modifier: Modifier,
     googleMapsState: GoogleMapsState,
-    mapSettings: MapSettings = MapSettings()
+    mapSettings: MapSettings = MapSettings(),
+    onMarkerClick: (GoogleMapsMarker) -> Unit = {}
 )
