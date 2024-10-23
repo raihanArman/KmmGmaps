@@ -16,9 +16,12 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.systemGestures
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -57,6 +60,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.randev.kmmgmaps.feature.maps.component.ItemPlace
 import com.randev.kmmgmaps.feature.maps.component.SearchBarPlace
+import com.randev.kmmgmaps.isKeyboardOpen
 import com.randev.kmmgmaps.maps.CameraCoordinate
 import com.randev.kmmgmaps.maps.GoogleMapsCompose
 import com.randev.kmmgmaps.maps.GoogleMapsMarker
@@ -139,6 +143,11 @@ fun MapsScreen(
             mapSettings = MapSettings(
                 myLocationEnabled = myLocation.latitude != 0.0,
                 composeEnabled = true,
+                padding = PaddingValues(
+                    top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
+                    bottom = WindowInsets.ime.asPaddingValues().calculateBottomPadding() -
+                            WindowInsets.systemGestures.asPaddingValues().calculateBottomPadding()
+                )
             ),
             onMarkerClick = { marker ->
                 viewModel.handleIntent(MapsIntent.SetSelectedMarker(marker))
@@ -148,6 +157,17 @@ fun MapsScreen(
         Box(
             modifier = Modifier
         ) {
+
+            val places by remember(model.placeState) {
+                derivedStateOf {
+                    val placeState = model.placeState
+                    if (placeState is State.Success) {
+                        placeState.data
+                    } else {
+                        emptyList()
+                    }
+                }
+            }
 
             SearchBarPlace(
                 value = model.query,
@@ -164,6 +184,20 @@ fun MapsScreen(
                     viewModel.handleIntent(
                         MapsIntent.SetIsShowSearch(false)
                     )
+                },
+                isPlaceNotEmpty = places.isNotEmpty(),
+                onBackButtonClick = {
+                    if (!model.isShowSearch) {
+                        // clear state
+                        viewModel.handleIntent(
+                            MapsIntent.SetPlacesClear
+                        )
+                        mapsState.removeAllMarker()
+                    } else {
+                        viewModel.handleIntent(
+                            MapsIntent.SetIsShowSearch(false)
+                        )
+                    }
                 },
                 content = { keyboardController ->
                     with(model.placeState) {

@@ -70,7 +70,7 @@ actual fun GoogleMapsCompose(
         )
     }
 
-    LaunchedEffect(moveCamera) {
+    LaunchedEffect(moveCamera, mapSettings) {
         println("Ampas kuda ->>> MOVE CAMERA $moveCamera")
         if (!moveCamera.isZeroCoordinate()) {
             val latLng = LatLng(
@@ -126,7 +126,7 @@ actual fun GoogleMapsCompose(
             myLocationButtonEnabled = mapSettings.myLocationButtonEnabled,
             compassEnabled = mapSettings.composeEnabled
         ),
-        contentPadding = PaddingValues(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding())
+        contentPadding = mapSettings.padding
     ) {
         for (marker in markerList) {
             val markerState = rememberMarkerState(

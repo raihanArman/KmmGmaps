@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,6 +24,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,7 +41,9 @@ import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.randev.kmmgmaps.isKeyboardOpen
 import kmmgooglemaps.composeapp.generated.resources.Res
+import kmmgooglemaps.composeapp.generated.resources.ic_arrow_back
 import kmmgooglemaps.composeapp.generated.resources.ic_search
 import org.jetbrains.compose.resources.painterResource
 
@@ -52,9 +57,13 @@ fun SearchBarPlace(
     onEditValue: (String) -> Unit,
     onDoneEdit: () -> Unit = {},
     isShowSearch: Boolean = false,
+    isPlaceNotEmpty: Boolean = false,
+    onBackButtonClick: () -> Unit = {},
     content: @Composable ColumnScope.(SoftwareKeyboardController?) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    val isKeyboardOpen by isKeyboardOpen()
 
     val modifierColumn by remember(isShowSearch) {
         derivedStateOf {
@@ -99,6 +108,30 @@ fun SearchBarPlace(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            if (isKeyboardOpen || isPlaceNotEmpty) {
+                IconButton(
+                    onClick = {
+                        when {
+                            isKeyboardOpen -> {
+                                keyboardController?.hide()
+                            }
+                            isPlaceNotEmpty -> {
+                                onBackButtonClick.invoke()
+                            }
+                        }
+                    },
+                    modifier = Modifier
+                        .size(24.dp)
+                ) {
+                    Image(
+                        painter = painterResource(Res.drawable.ic_arrow_back),
+                        contentDescription = null,
+                    )
+                }
+
+                Spacer(Modifier.width(12.dp))
+            }
+
             BasicTextField(
                 value = value,
                 onValueChange = onEditValue,

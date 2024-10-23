@@ -33,6 +33,7 @@ sealed class MapsIntent {
     data object ObserverQuery: MapsIntent()
     data class SetMyCoordinate(val coordinate: Coordinate): MapsIntent()
     data class SetSelectedMarker(val marker: GoogleMapsMarker): MapsIntent()
+    data object SetPlacesClear: MapsIntent()
 }
 
 class MapsViewModel: BaseViewModel<MapsState, MapsIntent>(
@@ -63,6 +64,10 @@ class MapsViewModel: BaseViewModel<MapsState, MapsIntent>(
 
             is MapsIntent.SetSelectedMarker -> {
                 setSelectedMarker(appIntent.marker)
+            }
+
+            MapsIntent.SetPlacesClear ->  {
+                restartPlaceState()
             }
         }
     }
@@ -144,8 +149,8 @@ class MapsViewModel: BaseViewModel<MapsState, MapsIntent>(
 
     private fun restartPlaceState() {
         updateModel {
-            it.copy(
-                placeState = State.Idle
+            MapsState().copy(
+                myCoordinate = it.myCoordinate
             )
         }
     }

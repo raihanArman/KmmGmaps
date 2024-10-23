@@ -1,5 +1,6 @@
 package com.randev.kmmgmaps.maps
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -13,9 +14,9 @@ import com.bumble.appyx.utils.multiplatform.Parcelize
  * @date 07/10/24
  */
 
-@Parcelize
 data class MapSettings(
     val myLocationEnabled: Boolean = false,
     val myLocationButtonEnabled: Boolean = false,
-    val composeEnabled: Boolean = false
-): Parcelable
+    val composeEnabled: Boolean = false,
+    val padding: PaddingValues = PaddingValues()
+)
