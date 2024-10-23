@@ -27,7 +27,8 @@ object PlaceMapper {
                     latitude = it.lat ?: 0.0,
                     longitude = it.lng ?: 0.0
                 )
-            } ?: Coordinate()
+            } ?: Coordinate(),
+            distance = item?.distance ?: -1
         )
     }
 }

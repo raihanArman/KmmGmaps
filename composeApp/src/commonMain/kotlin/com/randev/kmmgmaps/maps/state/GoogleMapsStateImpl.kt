@@ -122,6 +122,10 @@ class GoogleMapsStateImpl(
         }
     }
 
+    override fun removeAllMarker() {
+        _markerList.update { emptyList() }
+    }
+
     fun saveCameraPosition(cameraCoordinate: CameraCoordinate) {
         _savedCameraCoordinate.update {
             cameraCoordinate

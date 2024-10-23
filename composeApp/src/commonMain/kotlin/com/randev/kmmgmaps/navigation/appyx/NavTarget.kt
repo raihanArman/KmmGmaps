@@ -20,6 +20,10 @@ sealed class NavTarget: Parcelable {
 
     @Parcelize
     data object Main: NavTarget()
+
     @Parcelize
     data object ReservedLocation: NavTarget()
+
+    @Parcelize
+    data object FeatureMaps: NavTarget()
 }

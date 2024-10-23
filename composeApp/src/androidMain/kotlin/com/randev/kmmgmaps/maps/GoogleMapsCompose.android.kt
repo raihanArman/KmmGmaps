@@ -1,11 +1,17 @@
 package com.randev.kmmgmaps.maps
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraMoveStartedReason
@@ -118,7 +124,8 @@ actual fun GoogleMapsCompose(
         uiSettings = MapUiSettings(
             myLocationButtonEnabled = mapSettings.myLocationButtonEnabled,
             compassEnabled = mapSettings.composeEnabled
-        )
+        ),
+        contentPadding = PaddingValues(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding())
     ) {
         for (marker in markerList) {
             val markerState = rememberMarkerState(

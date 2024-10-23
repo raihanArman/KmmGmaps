@@ -28,6 +28,14 @@ fun MainScreen() {
         ) {
             Text("Maps")
         }
+
+        Button(
+            onClick = {
+                navigator.navigate(NavTarget.FeatureMaps)
+            },
+        ) {
+            Text("Feature Maps")
+        }
     }
 
 }

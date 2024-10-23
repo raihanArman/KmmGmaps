@@ -29,6 +29,7 @@ interface GoogleMapsState {
 
     fun addMarker(marker: GoogleMapsMarker)
     fun removeMarker(marker: GoogleMapsMarker)
+    fun removeAllMarker()
 
     companion object {
         val Saver: Saver<GoogleMapsState, GoogleMapsStateSaveable> = Saver(
