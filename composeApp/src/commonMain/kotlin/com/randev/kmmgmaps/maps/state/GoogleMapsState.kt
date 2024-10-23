@@ -59,7 +59,7 @@ interface GoogleMapsState {
     ): Parcelable
 }
 
-expect fun buildGoogleMapsState(initialCameraCoordinate: CameraCoordinate): GoogleMapsState
+//expect fun buildGoogleMapsState(initialCameraCoordinate: CameraCoordinate): GoogleMapsState
 
 @Composable
 fun rememberGoogleMapsState(initialCameraCoordinate: CameraCoordinate): GoogleMapsState {

@@ -55,6 +55,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.randev.kmmgmaps.feature.maps.component.ItemPlace
+import com.randev.kmmgmaps.feature.maps.component.SearchBarPlace
 import com.randev.kmmgmaps.maps.CameraCoordinate
 import com.randev.kmmgmaps.maps.GoogleMapsCompose
 import com.randev.kmmgmaps.maps.GoogleMapsMarker
@@ -119,7 +121,7 @@ fun MapsScreen(
         if (model.selectedPlace != Place.Empty) {
             mapsState.animatedCamera(
                 cameraCoordinate = CameraCoordinate(
-                    coordinate = model.selectedPlace.coordinate, zoom = 14f
+                    coordinate = model.selectedPlace.coordinate, zoom = 17f
                 )
             )
         }
@@ -200,174 +202,4 @@ fun MapsScreen(
             )
         }
     }
-}
-
-@Composable
-private fun SearchBarPlace(
-    value: String,
-    onEditValue: (String) -> Unit,
-    onDoneEdit: () -> Unit = {},
-    isShowSearch: Boolean = false,
-    content: @Composable ColumnScope.(SoftwareKeyboardController?) -> Unit
-) {
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    val modifierColumn by remember(isShowSearch) {
-        derivedStateOf {
-            if (isShowSearch) {
-                Modifier.fillMaxSize()
-            } else {
-                Modifier.wrapContentSize()
-            }
-        }
-    }
-
-    val backgroundColorColumn by remember(isShowSearch) {
-        derivedStateOf {
-            if (isShowSearch) {
-                Color.White
-            } else {
-                Color.Transparent
-            }
-        }
-    }
-
-    Column(
-        modifier = modifierColumn
-            .background(color = backgroundColorColumn)
-            .padding(horizontal = 12.dp)
-    ) {
-        // Search bar
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    paddingValues = PaddingValues(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding())
-                )
-                .shadow(
-                    elevation = 4.dp,
-                    shape = RoundedCornerShape(12.dp)
-                )
-                .background(
-                    color = Color.White,
-                    shape = RoundedCornerShape(12.dp)
-                )
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            BasicTextField(
-                value = value,
-                onValueChange = onEditValue,
-                decorationBox = { decoration ->
-                    if (value.isEmpty()) {
-                        Text(
-                            "Search",
-                            color = Color.Black.copy(alpha = 0.5f)
-                        )
-                    }
-
-                    decoration.invoke()
-                },
-                singleLine = true,
-                keyboardActions = KeyboardActions(onSearch = {
-                    onDoneEdit.invoke()
-                }),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Search
-                ),
-                modifier = Modifier
-                    .weight(1f)
-            )
-
-            Image(
-                painter = painterResource(Res.drawable.ic_search),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(24.dp),
-            )
-        }
-
-        if (isShowSearch) {
-            // Content
-            val scrollVertical = rememberScrollState()
-
-            LaunchedEffect(scrollVertical.isScrollInProgress) {
-                if (scrollVertical.isScrollInProgress) {
-                    keyboardController?.hide()
-                }
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(scrollVertical)
-                    .pointerInput(Unit) {
-                        detectTapGestures {
-                            keyboardController?.hide()
-                        }
-                    },
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                content.invoke(this, keyboardController)
-            }
-        }
-    }
-}
-
-@Composable
-fun ItemPlace(
-    place: Place,
-    onClick: (Place) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                onClick.invoke(place)
-            }
-            .padding(6.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .width(34.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_pin_marker),
-                contentDescription = null,
-                modifier = Modifier.size(24.dp),
-                tint = Color.Gray,
-            )
-            Spacer(Modifier.height(6.dp))
-            Text(
-                text = place.distanceOnKm(),
-                style = TextStyle.Default.copy(color = Color.Gray, fontSize = 10.sp),
-                modifier = Modifier
-                    .fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
-        }
-
-        Spacer(Modifier.width(6.dp))
-
-        Column(
-            modifier = Modifier
-                .weight(1f),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = place.name,
-                style = TextStyle.Default.copy(fontWeight = FontWeight.SemiBold)
-            )
-            Spacer(Modifier.height(6.dp))
-            Text(
-                text = place.address,
-                style = TextStyle.Default.copy(fontSize = 12.sp)
-            )
-        }
-    }
-
 }

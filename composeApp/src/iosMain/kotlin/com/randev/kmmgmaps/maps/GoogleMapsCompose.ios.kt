@@ -34,7 +34,8 @@ actual fun GoogleMapsCompose(
     val gestureManager = remember { GestureManager() }
     val googleMapsDelegate = remember { IosGoogleMapsDelegate(
         googleMapsState as GoogleMapsStateImpl,
-        gestureManager
+        gestureManager,
+        onMarkerClick = onMarkerClick
     ) }
     val initialCamera by googleMapsState.asImplement().initialCameraCoordinate.collectAsState()
     val moveCamera by googleMapsState.asImplement().moveCameraCoordinate.collectAsState()
