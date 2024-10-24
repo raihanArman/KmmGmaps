@@ -43,6 +43,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -58,8 +59,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.randev.kmmgmaps.feature.maps.component.CarouselHeight
+import com.randev.kmmgmaps.feature.maps.component.CarouselPlaces
 import com.randev.kmmgmaps.feature.maps.component.ItemPlace
 import com.randev.kmmgmaps.feature.maps.component.SearchBarPlace
+import com.randev.kmmgmaps.isAndroid
 import com.randev.kmmgmaps.isKeyboardOpen
 import com.randev.kmmgmaps.maps.CameraCoordinate
 import com.randev.kmmgmaps.maps.DefaultMapsPadding
@@ -124,12 +128,49 @@ fun MapsScreen(
 
     LaunchedEffect(model.selectedPlace) {
         if (model.selectedPlace != Place.Empty) {
+            println("Ampas kuda -> title ${model.selectedPlace.name}")
             mapsState.animatedCamera(
                 cameraCoordinate = CameraCoordinate(
                     coordinate = model.selectedPlace.coordinate, zoom = 17f
                 )
             )
         }
+    }
+
+    val places by remember(model.placeState) {
+        derivedStateOf {
+            val placeState = model.placeState
+            if (placeState is State.Success) {
+                placeState.data
+            } else {
+                emptyList()
+            }
+        }
+    }
+
+    val imePadding by rememberUpdatedState(WindowInsets.ime.asPaddingValues().calculateBottomPadding())
+    val systemGesture by rememberUpdatedState(WindowInsets.systemGestures.asPaddingValues().calculateBottomPadding())
+    val isKeyboardOpen by isKeyboardOpen()
+    LaunchedEffect(places, imePadding, systemGesture, isKeyboardOpen) {
+        val platformSystemGesture = if (imePadding > 0.dp) {
+            systemGesture
+        } else {
+            if (isAndroid) {
+                0.dp
+            } else {
+                systemGesture
+            }
+        }
+
+        val bottomMapsPadding = when {
+            isKeyboardOpen -> imePadding - platformSystemGesture
+            places.isNotEmpty() -> (CarouselHeight + 16.dp) - platformSystemGesture
+            else -> 0.dp
+        }
+
+        viewModel.handleIntent(
+            MapsIntent.SetBottomMapPadding(bottomMapsPadding)
+        )
     }
 
     Box(
@@ -144,28 +185,31 @@ fun MapsScreen(
             mapSettings = MapSettings(
                 myLocationEnabled = myLocation.latitude != 0.0,
                 composeEnabled = true,
-                padding = DefaultMapsPadding
+                padding = PaddingValues(
+                    top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
+                    bottom = model.mapBottomPadding
+                )
             ),
             onMarkerClick = { marker ->
                 viewModel.handleIntent(MapsIntent.SetSelectedMarker(marker))
             }
         )
 
+        CarouselPlaces(
+            modifier = Modifier
+                .align(Alignment.BottomCenter),
+            places = places,
+            selectedPlace = model.selectedPlace,
+            onPageChange = { place ->
+                viewModel.handleIntent(
+                    MapsIntent.SetSelectedPlace(place)
+                )
+            }
+        )
+
         Box(
             modifier = Modifier
         ) {
-
-            val places by remember(model.placeState) {
-                derivedStateOf {
-                    val placeState = model.placeState
-                    if (placeState is State.Success) {
-                        placeState.data
-                    } else {
-                        emptyList()
-                    }
-                }
-            }
-
             SearchBarPlace(
                 value = model.query,
                 onEditValue = {
@@ -211,7 +255,8 @@ fun MapsScreen(
                                 for (place in places) {
                                     mapsState.addMarker(
                                         marker = GoogleMapsMarker(
-                                            coordinate = place.coordinate
+                                            coordinate = place.coordinate,
+                                            title = place.name
                                         )
                                     )
                                 }

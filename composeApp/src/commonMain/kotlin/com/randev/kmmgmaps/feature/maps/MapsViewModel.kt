@@ -1,5 +1,7 @@
 package com.randev.kmmgmaps.feature.maps
 
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.randev.kmmgmaps.base.BaseViewModel
@@ -23,7 +25,8 @@ data class MapsState(
     val placeState: State<List<Place>> = State.Idle,
     val selectedPlace: Place = Place.Empty,
     val isShowSearch: Boolean = false,
-    val myCoordinate: Coordinate = Coordinate()
+    val myCoordinate: Coordinate = Coordinate(),
+    val mapBottomPadding: Dp = 0.dp
 )
 
 sealed class MapsIntent {
@@ -34,6 +37,7 @@ sealed class MapsIntent {
     data class SetMyCoordinate(val coordinate: Coordinate): MapsIntent()
     data class SetSelectedMarker(val marker: GoogleMapsMarker): MapsIntent()
     data object SetPlacesClear: MapsIntent()
+    data class SetBottomMapPadding(val padding: Dp): MapsIntent()
 }
 
 class MapsViewModel: BaseViewModel<MapsState, MapsIntent>(
@@ -69,6 +73,18 @@ class MapsViewModel: BaseViewModel<MapsState, MapsIntent>(
             MapsIntent.SetPlacesClear ->  {
                 restartPlaceState()
             }
+
+            is MapsIntent.SetBottomMapPadding -> {
+                setSelectedMapPadding(appIntent.padding)
+            }
+        }
+    }
+
+    private fun setSelectedMapPadding(padding: Dp) {
+        updateModel {
+            it.copy(
+                mapBottomPadding = padding
+            )
         }
     }
 

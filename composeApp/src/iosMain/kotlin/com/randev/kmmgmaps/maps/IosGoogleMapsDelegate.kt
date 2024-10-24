@@ -31,7 +31,7 @@ class IosGoogleMapsDelegate(
 
         val zoom = didChangeCameraPosition.zoom
         stateImpl.saveCameraPosition(cameraCoordinate = CameraCoordinate(coordinate, zoom))
-        println("Ampas kuda -> zoom $zoom | coordinate $coordinate")
+//        println("Ampas kuda -> zoom $zoom | coordinate $coordinate")
 
         gestureManager.setCoordinate(coordinate)
     }
@@ -54,6 +54,7 @@ class IosGoogleMapsDelegate(
         )
 
         onMarkerClick.invoke(googleMapsMarker)
+        mapView.selectedMarker = didTapMarker
         return true
     }
 }

@@ -146,6 +146,7 @@ actual fun GoogleMapsCompose(
 
                     if (googleMapsMarker != null) {
                         onMarkerClick.invoke(googleMapsMarker)
+                        androidMarker.showInfoWindow()
                     }
                     true
                 }
