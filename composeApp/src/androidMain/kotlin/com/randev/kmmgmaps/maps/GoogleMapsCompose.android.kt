@@ -45,6 +45,7 @@ actual fun GoogleMapsCompose(
     val isNeedZoom by googleMapsState.asImplement().isNeedZoom.collectAsState()
 
     val markerList by googleMapsState.asImplement().markerList.collectAsState()
+    val selectedMarker by googleMapsState.asImplement().selectedMarker.collectAsState()
 
     val gestureManager = remember {
         GestureManager()
@@ -135,6 +136,15 @@ actual fun GoogleMapsCompose(
                     marker.coordinate.longitude
                 )
             )
+
+            LaunchedEffect(selectedMarker) {
+                if (markerState.position.asString() == selectedMarker?.coordinate?.toString()) {
+                    markerState.showInfoWindow()
+                } else {
+                    markerState.hideInfoWindow()
+                }
+            }
+
             Marker(
                 state = markerState,
                 title = marker.title,

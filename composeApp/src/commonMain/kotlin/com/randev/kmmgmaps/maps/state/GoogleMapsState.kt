@@ -9,6 +9,7 @@ import com.bumble.appyx.utils.multiplatform.Parcelize
 import com.randev.kmmgmaps.maps.CameraCoordinate
 import com.randev.kmmgmaps.maps.GoogleMapsMarker
 import com.randev.kmmgmaps.maps.MoveGesture
+import com.randev.kmmgmaps.network.data.Coordinate
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -30,6 +31,7 @@ interface GoogleMapsState {
     fun addMarker(marker: GoogleMapsMarker)
     fun removeMarker(marker: GoogleMapsMarker)
     fun removeAllMarker()
+    fun setSelectedMarkerByCoordinate(coordinate: Coordinate)
 
     companion object {
         val Saver: Saver<GoogleMapsState, GoogleMapsStateSaveable> = Saver(

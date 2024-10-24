@@ -3,6 +3,7 @@ package com.randev.kmmgmaps.maps.state
 import com.randev.kmmgmaps.maps.CameraCoordinate
 import com.randev.kmmgmaps.maps.GoogleMapsMarker
 import com.randev.kmmgmaps.maps.MoveGesture
+import com.randev.kmmgmaps.network.data.Coordinate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -47,6 +48,8 @@ class GoogleMapsStateImpl(
 
     val zoomCamera: MutableStateFlow<Float> = MutableStateFlow(0f)
     val isNeedZoom: MutableStateFlow<Boolean> = MutableStateFlow(false)
+
+    val selectedMarker: MutableStateFlow<GoogleMapsMarker?> = MutableStateFlow(null)
 
     private val scope = object : CoroutineScope {
         override val coroutineContext: CoroutineContext
@@ -124,6 +127,16 @@ class GoogleMapsStateImpl(
 
     override fun removeAllMarker() {
         _markerList.update { emptyList() }
+    }
+
+    override fun setSelectedMarkerByCoordinate(coordinate: Coordinate) {
+        val markerFound = _markerList.value.find {
+            it.coordinate == coordinate
+        }
+
+        selectedMarker.update {
+            markerFound
+        }
     }
 
     fun saveCameraPosition(cameraCoordinate: CameraCoordinate) {

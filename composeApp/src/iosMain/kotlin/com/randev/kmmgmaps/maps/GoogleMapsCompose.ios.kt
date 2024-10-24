@@ -45,6 +45,7 @@ actual fun GoogleMapsCompose(
     val zoomCamera by googleMapsState.asImplement().zoomCamera.collectAsState()
     val isNeedZoom by googleMapsState.asImplement().isNeedZoom.collectAsState()
     val markerList by googleMapsState.asImplement().markerList.collectAsState()
+    val selectedMarker by googleMapsState.asImplement().selectedMarker.collectAsState()
 
     val gesture by gestureManager.gesture.collectAsState()
 
@@ -98,8 +99,9 @@ actual fun GoogleMapsCompose(
         }
     }
 
-    LaunchedEffect(markerList) {
+    LaunchedEffect(markerList, selectedMarker) {
         googleMapsView.clear()
+        googleMapsView.selectedMarker = null
         for (marker in markerList) {
             val gmsMarker = GMSMarker()
             gmsMarker.setPosition(CLLocationCoordinate2DMake(
@@ -109,6 +111,10 @@ actual fun GoogleMapsCompose(
 
             gmsMarker.title = marker.title
             gmsMarker.map = googleMapsView
+
+            if (selectedMarker?.coordinate?.toString() == marker.coordinate.toString()) {
+                googleMapsView.selectedMarker = gmsMarker
+            }
         }
     }
 

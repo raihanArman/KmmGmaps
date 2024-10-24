@@ -59,6 +59,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.randev.kmmgmaps.BackPressed
 import com.randev.kmmgmaps.feature.maps.component.CarouselHeight
 import com.randev.kmmgmaps.feature.maps.component.CarouselPlaces
 import com.randev.kmmgmaps.feature.maps.component.ItemPlace
@@ -73,6 +74,7 @@ import com.randev.kmmgmaps.maps.LocationService
 import com.randev.kmmgmaps.maps.MapSettings
 import com.randev.kmmgmaps.maps.rememberLocationService
 import com.randev.kmmgmaps.maps.state.rememberGoogleMapsState
+import com.randev.kmmgmaps.navigation.appyx.LocalNavigator
 import com.randev.kmmgmaps.network.State
 import com.randev.kmmgmaps.network.data.Place
 import com.randev.kmmgmaps.onError
@@ -103,6 +105,7 @@ fun MapsScreen(
     val isMapHasLoaded by mapsState.mapLoaded.collectAsState()
     val myLocation by locationService.myLocation.collectAsState()
     val model by viewModel.stateData.collectAsState()
+    val navigator = LocalNavigator.current
 
     LaunchedEffect(Unit) {
         locationService.getMyLocation()
@@ -134,6 +137,8 @@ fun MapsScreen(
                     coordinate = model.selectedPlace.coordinate, zoom = 17f
                 )
             )
+
+            mapsState.setSelectedMarkerByCoordinate(model.selectedPlace.coordinate)
         }
     }
 
@@ -145,6 +150,26 @@ fun MapsScreen(
             } else {
                 emptyList()
             }
+        }
+    }
+
+    BackPressed(true) {
+        when {
+            model.isShowSearch -> {
+                viewModel.handleIntent(
+                    MapsIntent.SetIsShowSearch(false)
+                )
+            }
+            places.isNotEmpty() -> {
+                viewModel.handleIntent(
+                    MapsIntent.SetPlacesClear
+                )
+                mapsState.removeAllMarker()
+            }
+            else -> {
+                navigator.back()
+            }
+
         }
     }
 
