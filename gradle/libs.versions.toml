@@ -21,6 +21,9 @@ appyx = "2.0.1"
 googleMaps-android-core = "19.0.0"
 googleMaps-android-compose = "5.0.4"
 android-play-service = "21.3.0"
+androidGoogleService = "4.4.2"
+androidFirebase-auth = "23.0.0"
+android-play-service-auth = "20.7.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -49,6 +52,8 @@ appyx-backstack = { module = "com.bumble.appyx:backstack", version.ref = "appyx"
 googleMaps-android-core = { module = "com.google.android.gms:play-services-maps", version.ref = "googleMaps-android-core" }
 googleMaps-android-compose = { module = "com.google.maps.android:maps-compose", version.ref = "googleMaps-android-compose" }
 android-play-service-location = { module = "com.google.android.gms:play-services-location", version.ref = "android-play-service" }
+androidFirebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "androidFirebase-auth" }
+android-play-service-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "android-play-service-auth" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -59,3 +64,4 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 kotlinSerializer = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlinAndroidParcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 nativeCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
+androidGoogleService = { id = "com.google.gms.google-services", version.ref = "androidGoogleService" }

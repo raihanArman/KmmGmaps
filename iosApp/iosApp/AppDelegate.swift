@@ -17,4 +17,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         print("first launch ios")
         return appDelegateAdapter.application(application: application, didFinishLaunchingWithOptions: launchOptions)
     }
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        return appDelegateAdapter.application(app: app, openURL: url, options: options)
+    }
 }

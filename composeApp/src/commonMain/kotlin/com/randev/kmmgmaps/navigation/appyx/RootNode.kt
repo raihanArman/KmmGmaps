@@ -21,6 +21,7 @@ import com.bumble.appyx.navigation.modality.NodeContext
 import com.bumble.appyx.navigation.node.Node
 import com.bumble.appyx.navigation.node.node
 import com.randev.kmmgmaps.feature.googlemaps.GoogleMapsScreen
+import com.randev.kmmgmaps.feature.googlesignin.GoogleSignInScreen
 import com.randev.kmmgmaps.feature.main.MainScreen
 import com.randev.kmmgmaps.feature.maps.MapsScreen
 import com.randev.kmmgmaps.feature.reverse.ReversedLocationScreen
@@ -122,6 +123,12 @@ class RootNode(
             is NavTarget.FeatureMaps -> node(nodeContext) {
                 BoxBackground {
                     MapsScreen()
+                }
+            }
+
+            NavTarget.FeatureGoogleSignIn -> node(nodeContext) {
+                BoxBackground {
+                    GoogleSignInScreen()
                 }
             }
         }

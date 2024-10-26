@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.kotlinSerializer)
     alias(libs.plugins.kotlinAndroidParcelize)
     alias(libs.plugins.nativeCocoapods)
+    alias(libs.plugins.androidGoogleService)
 }
 
 val secretFolder = "$projectDir/build/generatedSecret"
@@ -52,6 +53,18 @@ kotlin {
             extraOpts += listOf("-compiler-option", "-fmodules")
         }
 
+        pod("FirebaseCore") {
+            extraOpts += listOf("-compiler-option", "-fmodules")
+        }
+
+        pod("FirebaseAuth") {
+            extraOpts += listOf("-compiler-option", "-fmodules")
+        }
+
+        pod("GoogleSignIn") {
+            extraOpts += listOf("-compiler-option", "-fmodules")
+        }
+
         // Maps custom Xcode configuration to NativeBuildType
 //        xcodeConfigurationToNativeBuildType["CUSTOM_DEBUG"] = NativeBuildType.DEBUG
 //        xcodeConfigurationToNativeBuildType["CUSTOM_RELEASE"] = NativeBuildType.RELEASE
@@ -83,6 +96,9 @@ kotlin {
             implementation(libs.googleMaps.android.core)
             implementation(libs.googleMaps.android.compose)
             implementation(libs.android.play.service.location)
+            implementation(libs.android.play.service.auth)
+
+            implementation(libs.androidFirebase.auth)
 
         }
 

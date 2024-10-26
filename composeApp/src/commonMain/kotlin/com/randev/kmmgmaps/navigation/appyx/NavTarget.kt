@@ -26,4 +26,7 @@ sealed class NavTarget: Parcelable {
 
     @Parcelize
     data object FeatureMaps: NavTarget()
+
+    @Parcelize
+    data object FeatureGoogleSignIn: NavTarget()
 }
