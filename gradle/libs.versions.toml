@@ -24,6 +24,8 @@ android-play-service = "21.3.0"
 androidGoogleService = "4.4.2"
 androidFirebase-auth = "23.0.0"
 android-play-service-auth = "20.7.0"
+android-credentials = "1.2.2"
+android-google-id = "1.1.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -54,6 +56,10 @@ googleMaps-android-compose = { module = "com.google.maps.android:maps-compose", 
 android-play-service-location = { module = "com.google.android.gms:play-services-location", version.ref = "android-play-service" }
 androidFirebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "androidFirebase-auth" }
 android-play-service-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "android-play-service-auth" }
+
+android-credentials = { module = "androidx.credentials:credentials", version.ref = "android-credentials" }
+android-credentials-play-service-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "android-credentials" }
+android-google-id = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "android-google-id" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

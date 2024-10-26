@@ -100,6 +100,10 @@ kotlin {
 
             implementation(libs.androidFirebase.auth)
 
+            implementation(libs.android.credentials)
+            implementation(libs.android.credentials.play.service.auth)
+            implementation(libs.android.google.id)
+
         }
 
         commonMain.dependencies {
