@@ -46,7 +46,7 @@ kotlin {
 
         pod("netfox") {
             extraOpts += listOf("-compiler-option", "-fmodules")
-            version = "1.21.0"
+//            version = "1.21.0"
         }
 
         pod("GoogleMaps") {
@@ -128,6 +128,8 @@ kotlin {
             implementation(libs.appyx.navigation)
             implementation(libs.appyx.interactions)
             api(libs.appyx.backstack)
+
+            implementation(libs.image.loader)
         }
 
         iosMain.dependencies {

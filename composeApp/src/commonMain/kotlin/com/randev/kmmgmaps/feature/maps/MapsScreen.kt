@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.randev.kmmgmaps.BackPressed
+import com.randev.kmmgmaps.authentication.rememberGoogleAuthentication
 import com.randev.kmmgmaps.feature.maps.component.CarouselHeight
 import com.randev.kmmgmaps.feature.maps.component.CarouselPlaces
 import com.randev.kmmgmaps.feature.maps.component.ItemPlace
@@ -106,6 +107,9 @@ fun MapsScreen(
     val myLocation by locationService.myLocation.collectAsState()
     val model by viewModel.stateData.collectAsState()
     val navigator = LocalNavigator.current
+
+    val googleAuthentication = rememberGoogleAuthentication()
+    val user by googleAuthentication.user
 
     LaunchedEffect(Unit) {
         locationService.getMyLocation()
@@ -237,6 +241,7 @@ fun MapsScreen(
         ) {
             SearchBarPlace(
                 value = model.query,
+                photoUrl = user?.photoUrl,
                 onEditValue = {
                     viewModel.handleIntent(
                         MapsIntent.SetQuery(it)

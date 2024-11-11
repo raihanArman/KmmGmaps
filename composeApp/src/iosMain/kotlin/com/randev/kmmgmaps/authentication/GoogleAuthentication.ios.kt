@@ -81,7 +81,8 @@ class IosGoogleAuthentication(
         return if (user != null) {
             User(
                 name = user.displayName().orEmpty(),
-                email = user.email().orEmpty()
+                email = user.email().orEmpty(),
+                photoUrl = user.photoURL()?.absoluteString
             )
         }else {
             null

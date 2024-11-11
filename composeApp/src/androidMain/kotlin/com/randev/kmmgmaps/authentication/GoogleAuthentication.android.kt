@@ -131,7 +131,8 @@ class AndroidGoogleAuthentication(
         return if (user != null) {
             User(
                 name = user.displayName.orEmpty(),
-                email = user.email.orEmpty()
+                email = user.email.orEmpty(),
+                photoUrl = user.photoUrl.toString()
             )
         }else {
             null

@@ -8,17 +8,17 @@
 
 import Foundation
 import SwiftUI
-import ComposeApp
+//import ComposeApp
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-    private let appDelegateAdapter = AppDelegateAdapter()
-    
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        print("first launch ios")
-        return appDelegateAdapter.application(application: application, didFinishLaunchingWithOptions: launchOptions)
-    }
-    
-    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        return appDelegateAdapter.application(app: app, openURL: url, options: options)
-    }
+//    private let appDelegateAdapter = AppDelegateAdapter()
+//    
+//    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+//        print("first launch ios")
+//        return appDelegateAdapter.application(application: application, didFinishLaunchingWithOptions: launchOptions)
+//    }
+//    
+//    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+//        return appDelegateAdapter.application(app: app, openURL: url, options: options)
+//    }
 }

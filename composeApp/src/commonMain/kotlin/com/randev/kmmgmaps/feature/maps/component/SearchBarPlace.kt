@@ -2,6 +2,7 @@ package com.randev.kmmgmaps.feature.maps.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,11 +20,13 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -42,6 +46,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.randev.kmmgmaps.isKeyboardOpen
+import com.seiko.imageloader.rememberImagePainter
 import kmmgooglemaps.composeapp.generated.resources.Res
 import kmmgooglemaps.composeapp.generated.resources.ic_arrow_back
 import kmmgooglemaps.composeapp.generated.resources.ic_search
@@ -59,6 +64,7 @@ fun SearchBarPlace(
     isShowSearch: Boolean = false,
     isPlaceNotEmpty: Boolean = false,
     onBackButtonClick: () -> Unit = {},
+    photoUrl: String? = null,
     content: @Composable ColumnScope.(SoftwareKeyboardController?) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -158,12 +164,24 @@ fun SearchBarPlace(
                     .weight(1f)
             )
 
-            Image(
-                painter = painterResource(Res.drawable.ic_search),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(24.dp),
-            )
+            if (photoUrl == null) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_search),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(24.dp),
+                )
+            } else {
+                val painter = rememberImagePainter(photoUrl)
+                Image(
+                    painter = painter,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clip(CircleShape)
+                        .clickable {  }
+                )
+            }
         }
 
         if (isShowSearch) {

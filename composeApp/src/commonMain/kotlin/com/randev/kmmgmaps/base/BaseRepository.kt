@@ -28,9 +28,9 @@ abstract class BaseRepository {
                 ignoreUnknownKeys = true
             })
         }
-        install(Logging) {
-            level = LogLevel.ALL
-        }
+//        install(Logging) {
+//            level = LogLevel.ALL
+//        }
     }
 
     suspend fun getHttpResponse(urlString: String): HttpResponse {
